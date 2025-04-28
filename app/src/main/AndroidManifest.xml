@@ -27,7 +27,7 @@
         android:theme="@style/Theme.DiabetesSupporter"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="com.ordresot.diabetessupporter.MainActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
