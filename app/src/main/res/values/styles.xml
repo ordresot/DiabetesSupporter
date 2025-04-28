@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="activityHomeRoundValueContainer">
+        <item name="android:layout_width">@dimen/activityHomeRoundValues</item>
+        <item name="android:layout_height">@dimen/activityHomeRoundValues</item>
+        <item name="android:background">@drawable/bg_circle</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="activityHomeRoundValue">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/charcoal_gray</item>
+    </style>
+
+    <style name="activityHomeRoundValueMeasurement">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:textColor">@color/charcoal_gray</item>
+    </style>
+
+    <style name="activityHomeRoundValueAnnotation">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:textColor">@color/dim_gray</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="moreMenuCardStyleBase">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:background">@drawable/bg_corners_30dp</item>
+    </style>
+
+    <style name="moreMenuCardStyleStart" parent="moreMenuCardStyleBase">
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:layout_marginStart">30dp</item>
+        <item name="android:layout_marginEnd">15dp</item>
+    </style>
+
+    <style name="moreMenuCardStyleEnd" parent="moreMenuCardStyleBase">
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:layout_marginEnd">30dp</item>
+        <item name="android:layout_marginStart">15dp</item>
+    </style>
+
+    <style name="moreMenuCardTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/charcoal_gray</item>
+    </style>
+</resources>

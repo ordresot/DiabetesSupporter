@@ -1,17 +1,16 @@
-package com.ordresot.diabetessupporter.ui.home
+package com.ordresot.diabetessupporter.presentation.diary
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.redikt.diabetessupporter.databinding.FragmentHomeBinding
+import com.redikt.diabetessupporter.databinding.FragmentDiaryBinding
 
-class HomeFragment : Fragment() {
+class DiaryFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentDiaryBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,16 +21,11 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val diaryViewModel = ViewModelProvider(this).get(DiaryViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentDiaryBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
         return root
     }
 
