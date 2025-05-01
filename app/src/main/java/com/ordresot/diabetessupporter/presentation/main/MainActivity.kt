@@ -1,5 +1,6 @@
 package com.ordresot.diabetessupporter.presentation.main
 
+import com.ordresot.diabetessupporter.presentation.wizard.WizardActivity
 import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -7,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.redikt.diabetessupporter.R
-import com.redikt.diabetessupporter.databinding.ActivityMainBinding
+import com.ordresot.diabetessupporter.R
+import com.ordresot.diabetessupporter.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,7 +30,12 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.getIsFirstRun().observe(this) { value ->
             if (value){
-
+                startActivity(
+                    Intent(
+                        this,
+                        WizardActivity::class.java
+                    )
+                )
             }
         }
     }

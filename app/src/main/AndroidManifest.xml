@@ -34,6 +34,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+        <activity
+            android:name="com.ordresot.diabetessupporter.presentation.wizard.WizardActivity"
+            android:exported="false"/>
+    </application>
 </manifest>

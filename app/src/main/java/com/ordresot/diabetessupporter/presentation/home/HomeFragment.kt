@@ -14,8 +14,8 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.redikt.diabetessupporter.R
-import com.redikt.diabetessupporter.databinding.FragmentHomeBinding
+import com.ordresot.diabetessupporter.R
+import com.ordresot.diabetessupporter.databinding.FragmentHomeBinding
 import java.io.File
 
 class HomeFragment : Fragment() {
