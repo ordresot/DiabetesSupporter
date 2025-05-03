@@ -1,9 +1,10 @@
 package com.ordresot.diabetessupporter.presentation.wizard
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,9 +12,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
@@ -22,7 +23,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,10 +38,9 @@ import androidx.navigation.compose.rememberNavController
 import com.redikt.diabetesapp.ui.theme.CharcoalGray
 import com.redikt.diabetesapp.ui.theme.DarkGreen
 import com.redikt.diabetesapp.ui.theme.DiabetesAppTheme
-import com.redikt.diabetesapp.ui.theme.LightGreen
 import com.redikt.diabetesapp.ui.theme.White
 
-class WizardActivity : ComponentActivity() {
+class WizardActivity : AppCompatActivity() {
 
     private lateinit var viewModel: WizardViewModel
 
@@ -76,7 +78,6 @@ class WizardActivity : ComponentActivity() {
 
         Scaffold(
             topBar = {
-                //WizardTopBarDotsStepper(currentStep = currentStep, totalSteps = 3)
                 WizardProgressBar(currentStep = currentStep, totalSteps = 3)
             }
         ) { padding ->
@@ -113,56 +114,87 @@ class WizardActivity : ComponentActivity() {
     }
 
     @Composable
-    fun StepOneScreen(viewModel: WizardViewModel, onNext: () -> Unit) {
-        Column(Modifier.fillMaxSize().padding(horizontal = 10.dp), verticalArrangement = Arrangement.Top) {
-            OutlinedTextField(
-                value = viewModel.stepOneData,
-                onValueChange = { viewModel.stepOneData = it },
-                label = { Text("Step 1 Input", color = CharcoalGray) },
-                textStyle = TextStyle(color = CharcoalGray),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(Modifier.height(16.dp))
-            Row {
-                StageOperatorButton(text = NEXT_BUTTON_TEXT, onClick = onNext, Modifier.weight(1f))
-            }
-        }
-    }
-
-    @Composable
     fun StepTwoScreen(viewModel: WizardViewModel, onNext: () -> Unit, onBack: () -> Unit) {
-        Column(Modifier.fillMaxSize().padding(horizontal = 10.dp), verticalArrangement = Arrangement.Top) {
-            OutlinedTextField(
-                value = viewModel.stepTwoData,
-                onValueChange = { viewModel.stepTwoData = it },
-                label = { Text("Step 2 Input", color = CharcoalGray) },
-                textStyle = TextStyle(color = CharcoalGray),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(Modifier.height(16.dp))
-            Row {
-                StageOperatorButton(text = BACK_BUTTON_TEXT, onClick = onBack, Modifier.weight(1f))
-                Spacer(Modifier.width(8.dp))
-                StageOperatorButton(text = NEXT_BUTTON_TEXT, onClick = onNext, Modifier.weight(1f))
+        Box (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)
+            ) {
+                OutlinedTextField(
+                    value = viewModel.stepTwoData,
+                    onValueChange = { viewModel.stepTwoData = it },
+                    label = { Text("Step 2 Input", color = CharcoalGray) },
+                    textStyle = TextStyle(color = CharcoalGray),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(16.dp))
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                StageOperatorButton(
+                    text = BACK_BUTTON_TEXT,
+                    onClick = onBack,
+                    Modifier.weight(1f),
+                    iconStart = Icons.AutoMirrored.Filled.KeyboardArrowLeft
+                )
+                StageOperatorButton(
+                    text = NEXT_BUTTON_TEXT,
+                    onClick = onNext,
+                    Modifier.weight(1f),
+                    iconEnd = Icons.AutoMirrored.Filled.KeyboardArrowRight
+                )
             }
         }
     }
 
     @Composable
     fun StepThreeScreen(viewModel: WizardViewModel, onBack: () -> Unit, onFinish: () -> Unit) {
-        Column(Modifier.fillMaxSize().padding(horizontal = 10.dp), verticalArrangement = Arrangement.Top) {
-            OutlinedTextField(
-                value = viewModel.stepThreeData,
-                onValueChange = { viewModel.stepThreeData = it },
-                label = { Text("Step 3 Input", color = CharcoalGray) },
-                textStyle = TextStyle(color = CharcoalGray),
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(Modifier.height(16.dp))
-            Row {
-                StageOperatorButton(text = BACK_BUTTON_TEXT, onClick = onBack, Modifier.weight(1f))
-                Spacer(Modifier.width(8.dp))
-                StageOperatorButton(text = FINISH_BUTTON_TEXT, onClick = onFinish, Modifier.weight(1f))
+        Box (
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)
+            ) {
+                OutlinedTextField(
+                    value = viewModel.stepThreeData,
+                    onValueChange = { viewModel.stepThreeData = it },
+                    label = { Text("Step 3 Input", color = CharcoalGray) },
+                    textStyle = TextStyle(color = CharcoalGray),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(Modifier.height(16.dp))
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                StageOperatorButton(
+                    text = BACK_BUTTON_TEXT,
+                    onClick = onBack,
+                    modifier = Modifier.weight(1f),
+                    iconStart = Icons.AutoMirrored.Filled.KeyboardArrowLeft
+                )
+                StageOperatorButton(
+                    text = FINISH_BUTTON_TEXT,
+                    onClick = onFinish,
+                    modifier = Modifier.weight(1f),
+                    iconEnd = Icons.AutoMirrored.Filled.KeyboardArrowRight
+                )
             }
         }
     }
@@ -174,10 +206,7 @@ class WizardActivity : ComponentActivity() {
             CenterAlignedTopAppBar(
                 title = {
                     Text("Мастер настройки", color = CharcoalGray, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp))
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = White
-                )
+                }
             )
             LinearProgressIndicator(
                 progress = (currentStep + 1) / totalSteps.toFloat(),
@@ -186,26 +215,6 @@ class WizardActivity : ComponentActivity() {
                     .height(10.dp)
                     .padding(horizontal = 10.dp),
                 color = DarkGreen
-            )
-        }
-    }
-
-    @Composable
-    fun StageOperatorButton(
-        text: String,
-        onClick: () -> Unit,
-        modifier: Modifier = Modifier
-    ) {
-        Button(
-            onClick = onClick,
-            modifier = modifier,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = LightGreen
-            )
-        ) {
-            Text(
-                text = text,
-                color = CharcoalGray
             )
         }
     }
