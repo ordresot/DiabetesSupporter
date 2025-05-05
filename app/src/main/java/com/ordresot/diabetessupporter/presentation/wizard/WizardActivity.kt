@@ -114,49 +114,6 @@ class WizardActivity : AppCompatActivity() {
     }
 
     @Composable
-    fun StepTwoScreen(viewModel: WizardViewModel, onNext: () -> Unit, onBack: () -> Unit) {
-        Box (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.TopCenter)
-            ) {
-                OutlinedTextField(
-                    value = viewModel.stepTwoData,
-                    onValueChange = { viewModel.stepTwoData = it },
-                    label = { Text("Step 2 Input", color = CharcoalGray) },
-                    textStyle = TextStyle(color = CharcoalGray),
-                    modifier = Modifier.fillMaxWidth()
-                )
-                Spacer(Modifier.height(16.dp))
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                StageOperatorButton(
-                    text = BACK_BUTTON_TEXT,
-                    onClick = onBack,
-                    Modifier.weight(1f),
-                    iconStart = Icons.AutoMirrored.Filled.KeyboardArrowLeft
-                )
-                StageOperatorButton(
-                    text = NEXT_BUTTON_TEXT,
-                    onClick = onNext,
-                    Modifier.weight(1f),
-                    iconEnd = Icons.AutoMirrored.Filled.KeyboardArrowRight
-                )
-            }
-        }
-    }
-
-    @Composable
     fun StepThreeScreen(viewModel: WizardViewModel, onBack: () -> Unit, onFinish: () -> Unit) {
         Box (
             modifier = Modifier

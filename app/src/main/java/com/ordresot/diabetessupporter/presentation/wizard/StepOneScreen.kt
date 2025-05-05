@@ -60,13 +60,7 @@ fun StepOneScreen(viewModel: WizardViewModel, onNext: () -> Unit) {
             Spacer(Modifier.height(16.dp))
 
             // Описание
-            Text(
-                text = "Укажите ваши персональные данные",
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                color = CharcoalGray,
-                modifier = Modifier.fillMaxWidth()
-            )
+            WizardParagraphTopic(text = "Укажите ваши персональные данные")
 
             Spacer(Modifier.height(25.dp))
 
@@ -215,7 +209,7 @@ fun GenderSelector(viewModel: WizardViewModel) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        GenderButton(
+        SurfaceRadioButton(
             selected = gender == "Женский",
             iconResId = R.drawable.ic_female,
             label = "Женщина",
@@ -226,7 +220,7 @@ fun GenderSelector(viewModel: WizardViewModel) {
                     onClick = { viewModel.setGender("Женский") }
                 )
         )
-        GenderButton(
+        SurfaceRadioButton(
             selected = gender == "Мужской",
             iconResId = R.drawable.ic_male,
             label = "Мужчина",
@@ -237,41 +231,5 @@ fun GenderSelector(viewModel: WizardViewModel) {
                     onClick = { viewModel.setGender("Мужской") }
                 )
         )
-    }
-}
-
-@Composable
-fun GenderButton(
-    selected: Boolean,
-    iconResId: Int,
-    label: String,
-    modifier: Modifier = Modifier
-) {
-    val backgroundColor = if (selected) LightGreen else Color(0xFFF0F0F0)
-    val contentColor = CharcoalGray
-
-    Surface(
-        shape = RoundedCornerShape(10.dp),
-        color = backgroundColor,
-        modifier = modifier
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(horizontal = 12.dp)
-        ) {
-            Icon(
-                painter = painterResource(iconResId),
-                contentDescription = null,
-                tint = contentColor,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = label,
-                color = contentColor,
-                fontSize = 16.sp
-            )
-        }
     }
 }

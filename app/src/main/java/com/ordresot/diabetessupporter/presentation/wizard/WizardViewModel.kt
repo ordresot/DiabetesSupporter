@@ -58,8 +58,13 @@ class WizardViewModel(
         _gender.value = value
     }
 
-    // Еще что-то
-    var stepTwoData by mutableStateOf("")
+    private val _glucoseMeasurement = MutableLiveData("")
+    val glucoseMeasurement: LiveData<String> = _glucoseMeasurement
+
+    fun setGlucoseMeasurement(value: String) {
+        _glucoseMeasurement.value = value
+    }
+
     var stepThreeData by mutableStateOf("")
 
     companion object {
