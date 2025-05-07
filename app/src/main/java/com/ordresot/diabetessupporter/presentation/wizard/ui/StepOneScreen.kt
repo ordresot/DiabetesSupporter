@@ -1,8 +1,9 @@
-package com.ordresot.diabetessupporter.presentation.wizard
+package com.ordresot.diabetessupporter.presentation.wizard.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,17 +13,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -33,19 +31,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.ordresot.diabetessupporter.R
-import com.ordresot.diabetessupporter.presentation.wizard.WizardActivity.Companion.NEXT_BUTTON_TEXT
-import com.redikt.diabetesapp.ui.theme.CharcoalGray
-import com.redikt.diabetesapp.ui.theme.LightGreen
+import com.ordresot.diabetessupporter.domain.models.GenderType
+import com.ordresot.diabetessupporter.presentation.wizard.viewmodel.WizardViewModel
+import com.ordresot.diabetessupporter.theme.CharcoalGray
+import com.ordresot.diabetessupporter.theme.LightGreen
 import java.util.Calendar
 
 @Composable
@@ -111,7 +105,6 @@ fun NameSurnameInput(
         textStyle = textFieldTextStyle()
     )
 
-    // Ввод фамилии
     TextField(
         value = lastName,
         onValueChange = { viewModel.setLastName(it) },
@@ -132,24 +125,22 @@ fun WeightHeightInput(
     Row(
         horizontalArrangement = Arrangement.spacedBy(30.dp)
     ) {
-        TextField(
+        NumberInputField(
             value = weight,
-            onValueChange = { viewModel.setWeight(it) },
-            label = { Text("Вес, кг") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.weight(1f),
-            colors = textFieldColorTheme(),
-            textStyle = textFieldTextStyle()
+            onValueChange = { value ->
+                viewModel.setWeight(value)
+            },
+            label = "Вес, кг",
+            modifier = Modifier.weight(1f)
         )
 
-        TextField(
+        NumberInputField(
             value = height,
-            onValueChange = { viewModel.setHeight(it) },
-            label = { Text("Рост, см") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.weight(1f),
-            colors = textFieldColorTheme(),
-            textStyle = textFieldTextStyle()
+            onValueChange = { value ->
+                viewModel.setHeight(value)
+            },
+            label = "Рост, см",
+            modifier = Modifier.weight(1f)
         )
     }
 }
@@ -171,13 +162,7 @@ fun BirthDateSelector(
 
     LaunchedEffect(Unit) {
         picker.addOnPositiveButtonClickListener { selectedDateMillis ->
-            val calendar = Calendar.getInstance().apply { timeInMillis = selectedDateMillis }
-            val formattedDate = "%02d.%02d.%04d".format(
-                calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.MONTH) + 1,
-                calendar.get(Calendar.YEAR)
-            )
-            viewModel.setBirthDate("День рождения - $formattedDate")
+            viewModel.setBirthDate(selectedDateMillis)
         }
     }
 
@@ -185,8 +170,12 @@ fun BirthDateSelector(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(LightGreen) // LightGreen
-            .clickable { picker.show(fragmentManager, picker.toString()) }
+            .background(LightGreen)
+            .clickable(
+                onClick = { picker.show(fragmentManager, picker.toString()) },
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            )
             .padding(horizontal = 12.dp, vertical = 16.dp)
     ) {
         Icon(imageVector = Icons.Default.DateRange, contentDescription = null, tint = CharcoalGray)
@@ -204,31 +193,35 @@ fun BirthDateSelector(
 
 @Composable
 fun GenderSelector(viewModel: WizardViewModel) {
-    val gender by viewModel.gender.observeAsState("Мужской")
+    val gender by viewModel.gender.observeAsState(GenderType.DEFAULT)
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         SurfaceRadioButton(
-            selected = gender == "Женский",
+            selected = gender == GenderType.FEMALE,
             iconResId = R.drawable.ic_female,
-            label = "Женщина",
+            label = GenderType.FEMALE.genderName,
             modifier = Modifier
                 .height(48.dp)
                 .weight(1f)
                 .clickable(
-                    onClick = { viewModel.setGender("Женский") }
+                    onClick = { viewModel.setGender(GenderType.FEMALE) },
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
                 )
         )
         SurfaceRadioButton(
-            selected = gender == "Мужской",
+            selected = gender == GenderType.MALE,
             iconResId = R.drawable.ic_male,
-            label = "Мужчина",
+            label = GenderType.MALE.genderName,
             modifier = Modifier
                 .height(48.dp)
                 .weight(1f)
                 .clickable(
-                    onClick = { viewModel.setGender("Мужской") }
+                    onClick = { viewModel.setGender(GenderType.MALE) },
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
                 )
         )
     }

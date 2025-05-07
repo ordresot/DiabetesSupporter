@@ -1,40 +1,59 @@
 package com.ordresot.diabetessupporter.data.dto
 
-import com.google.gson.reflect.TypeToken
-import java.lang.reflect.Type
+import com.ordresot.diabetessupporter.domain.models.GlucoseMeasurementType
 
 sealed class Preference(
     var value: Any? = null,
-    val key: String? = null,
-    val type: Type? = null
+    val key: String,
+    val defaultValue: Any
     ){
 
-    class FirstRunPreference(): Preference(key = PreferenceKey.IS_FIRST_RUN.key, type = object : TypeToken<Boolean>() {}.type) {
-        constructor(value: Boolean) : this() {
+    class FirstRunPreference():
+        Preference(
+            key = PreferenceKey.IS_FIRST_RUN.key,
+            defaultValue = true
+        ) {
+            constructor(value: Boolean) : this() {
             this.value = value
         }
     }
 
-    class GlucoseMmolLMeasurementPreference(): Preference(key = PreferenceKey.GLUCOSE_MMOLL_MEASUREMENT.key, type = object : TypeToken<Boolean>() {}.type) {
-        constructor(value: Boolean) : this() {
+    class GlucoseMeasurementPreference():
+        Preference(
+            key = PreferenceKey.GLUCOSE_MEASUREMENT.key,
+            defaultValue = GlucoseMeasurementDto(GlucoseMeasurementType.DEFAULT)
+        ) {
+            constructor(value: GlucoseMeasurementDto) : this() {
             this.value = value
         }
     }
 
-    class MedicationPreference(): Preference(key = PreferenceKey.MEDICATION.key, type = object : TypeToken<ArrayList<MedicationDto>>() {}.type){
-        constructor(value: List<MedicationDto>) : this() {
+    class MedicinePreference():
+        Preference(
+            key = PreferenceKey.MEDICATION.key,
+            defaultValue = ArrayList<MedicineDto>()
+        ){
+            constructor(value: List<MedicineDto>) : this() {
             this.value = value
         }
     }
 
-    class ProfilePreference(): Preference(key = PreferenceKey.PROFILE.key, type = object : TypeToken<ProfileDto>() {}.type){
-        constructor(value: ProfileDto) : this() {
+    class ProfilePreference():
+        Preference(
+            key = PreferenceKey.PROFILE.key,
+            defaultValue = ProfileDto()
+        ){
+            constructor(value: ProfileDto) : this() {
             this.value = value
         }
     }
 
-    class TargetGlucosePreference(): Preference(key = PreferenceKey.TARGET_GLUCOSE.key, type = object : TypeToken<TargetGlucoseDto>() {}.type){
-        constructor(value: TargetGlucoseDto) : this() {
+    class TargetGlucosePreference():
+        Preference(
+            key = PreferenceKey.TARGET_GLUCOSE.key,
+            defaultValue = GlucoseLimitsDto()
+        ){
+        constructor(value: GlucoseLimitsDto) : this() {
             this.value = value
         }
     }

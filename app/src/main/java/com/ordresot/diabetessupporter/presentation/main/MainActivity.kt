@@ -1,6 +1,6 @@
 package com.ordresot.diabetessupporter.presentation.main
 
-import com.ordresot.diabetessupporter.presentation.wizard.WizardActivity
+import com.ordresot.diabetessupporter.presentation.wizard.ui.WizardActivity
 import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView

@@ -1,14 +1,16 @@
 package com.ordresot.diabetessupporter.data.repository
 
 import com.ordresot.diabetessupporter.data.PreferenceClient
-import com.ordresot.diabetessupporter.data.dto.MedicationDto
+import com.ordresot.diabetessupporter.data.dto.MedicineDto
 import com.ordresot.diabetessupporter.data.dto.Preference
 import com.ordresot.diabetessupporter.data.dto.ProfileDto
-import com.ordresot.diabetessupporter.data.dto.TargetGlucoseDto
+import com.ordresot.diabetessupporter.data.dto.GlucoseLimitsDto
+import com.ordresot.diabetessupporter.data.dto.GlucoseMeasurementDto
 import com.ordresot.diabetessupporter.domain.api.repository.PreferencesRepository
-import com.ordresot.diabetessupporter.domain.models.Medication
+import com.ordresot.diabetessupporter.domain.models.Medicine
 import com.ordresot.diabetessupporter.domain.models.Profile
-import com.ordresot.diabetessupporter.domain.models.TargetGlucose
+import com.ordresot.diabetessupporter.domain.models.GlucoseLimits
+import com.ordresot.diabetessupporter.domain.models.GlucoseMeasurement
 
 class PreferencesRepositoryImpl(private val preferenceClient: PreferenceClient):
     PreferencesRepository {
@@ -21,35 +23,43 @@ class PreferencesRepositoryImpl(private val preferenceClient: PreferenceClient):
         preferenceClient.saveData(Preference.FirstRunPreference(value))
     }
 
-    override fun getGlucoseMeasurement(): Boolean {
-        val value = preferenceClient.getData(Preference.GlucoseMmolLMeasurementPreference()) as? Boolean
-        return value ?: true
+    override fun getGlucoseMeasurement(): GlucoseMeasurement {
+        val value = preferenceClient.getData(Preference.GlucoseMeasurementPreference()) as GlucoseMeasurementDto
+        return GlucoseMeasurement(
+            measurement = value.measurement
+        )
     }
 
-    override fun saveGlucoseMeasurement(value: Boolean) {
-        preferenceClient.saveData(Preference.GlucoseMmolLMeasurementPreference(value))
+    override fun saveGlucoseMeasurement(value: GlucoseMeasurement) {
+        preferenceClient.saveData(
+            Preference.GlucoseMeasurementPreference(
+                GlucoseMeasurementDto(
+                    measurement = value.measurement
+                )
+            )
+        )
     }
 
-    override fun getMedication(): List<Medication> {
-        val value = preferenceClient.getData(Preference.MedicationPreference()) as? List<MedicationDto> ?: emptyList()
+    override fun getMedication(): List<Medicine> {
+        val value = preferenceClient.getData(Preference.MedicinePreference()) as? List<MedicineDto> ?: emptyList()
         return value.map {
-            Medication(
+            Medicine(
                 name = it.name,
-                dose = it.dose,
-                amount = it.amount
+                value = it.value,
+                type = it.type
             )
         }
     }
 
-    override fun saveMedication(value: List<Medication>) {
+    override fun saveMedication(value: List<Medicine>) {
         val data = value.map {
-            MedicationDto(
+            MedicineDto(
                 name = it.name,
-                dose = it.dose,
-                amount = it.amount
+                value = it.value,
+                type = it.type
             )
         }
-        preferenceClient.saveData(Preference.MedicationPreference(data))
+        preferenceClient.saveData(Preference.MedicinePreference(data))
     }
 
     override fun getProfile(): Profile {
@@ -58,7 +68,9 @@ class PreferencesRepositoryImpl(private val preferenceClient: PreferenceClient):
                 name = value.name,
                 surname = value.surname,
                 weight = value.weight,
-                height = value.height
+                height = value.height,
+                birthday = value.birthday,
+                gender = value.gender
             )
     }
 
@@ -69,15 +81,17 @@ class PreferencesRepositoryImpl(private val preferenceClient: PreferenceClient):
                     name = value.name,
                     surname = value.surname,
                     weight = value.weight,
-                    height = value.height
+                    height = value.height,
+                    birthday = value.birthday,
+                    gender = value.gender
                 )
             )
         )
     }
 
-    override fun getTargetGlucose(): TargetGlucose {
-        val value = preferenceClient.getData(Preference.TargetGlucosePreference()) as TargetGlucoseDto
-        return TargetGlucose(
+    override fun getTargetGlucose(): GlucoseLimits {
+        val value = preferenceClient.getData(Preference.TargetGlucosePreference()) as GlucoseLimitsDto
+        return GlucoseLimits(
             targetGlucose = value.targetGlucose,
             highGlucose = value.highGlucose,
             lowGlucose = value.lowGlucose,
@@ -86,10 +100,10 @@ class PreferencesRepositoryImpl(private val preferenceClient: PreferenceClient):
         )
     }
 
-    override fun saveTargetGlucose(value: TargetGlucose) {
+    override fun saveTargetGlucose(value: GlucoseLimits) {
         preferenceClient.saveData(
             Preference.TargetGlucosePreference(
-                TargetGlucoseDto(
+                GlucoseLimitsDto(
                     targetGlucose = value.targetGlucose,
                     highGlucose = value.highGlucose,
                     lowGlucose = value.lowGlucose,

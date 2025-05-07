@@ -1,8 +1,12 @@
 package com.ordresot.diabetessupporter.domain.models
 
+import java.time.LocalDate
+
 data class Profile(
-    val name: String = "",
-    val surname: String = "",
-    val weight: Double,
-    val height: Double
+    var name: String = "",
+    var surname: String = "",
+    var gender: GenderType,
+    var weight: Double?,
+    var height: Double?,
+    var birthday: Long?
 )

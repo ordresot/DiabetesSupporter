@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.redikt.diabetessupporter"
+        applicationId = "com.ordresot.diabetessupporter"
         minSdk = 29
         targetSdk = 34
         versionCode = 1

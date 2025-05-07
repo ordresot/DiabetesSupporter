@@ -1,37 +1,72 @@
-package com.ordresot.diabetessupporter.presentation.wizard
+package com.ordresot.diabetessupporter.presentation.wizard.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.redikt.diabetesapp.ui.theme.CharcoalGray
-import com.redikt.diabetesapp.ui.theme.DarkGreen
-import com.redikt.diabetesapp.ui.theme.LightGreen
+import com.ordresot.diabetessupporter.domain.models.GlucoseMeasurementType
+import com.ordresot.diabetessupporter.theme.CharcoalGray
+import com.ordresot.diabetessupporter.theme.DarkGreen
+import com.ordresot.diabetessupporter.theme.LightGreen
+import java.util.Locale
+
+const val BACK_BUTTON_TEXT = "Вернуться"
+const val FINISH_BUTTON_TEXT = "Завершить"
+const val NEXT_BUTTON_TEXT = "Далее"
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WizardProgressBar(currentStep: Int, totalSteps: Int) {
+    Column {
+        CenterAlignedTopAppBar(
+            title = {
+                Text("Мастер настройки", color = CharcoalGray, style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp))
+            }
+        )
+        LinearProgressIndicator(
+            progress = (currentStep + 1) / totalSteps.toFloat(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(10.dp)
+                .padding(horizontal = 10.dp),
+            color = DarkGreen
+        )
+    }
+}
 
 @Composable
 fun StageOperatorButton(
@@ -47,7 +82,11 @@ fun StageOperatorButton(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
             .background(LightGreen)
-            .clickable { onClick() }
+            .clickable(
+                onClick = onClick,
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            )
             .padding(horizontal = 16.dp, vertical = 12.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -73,7 +112,8 @@ fun StageOperatorButton(
             Text(
                 text = text,
                 color = CharcoalGray,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+                fontSize = 16.sp
             )
         }
 
@@ -162,6 +202,78 @@ fun WizardParagraphTopic(
         textAlign = TextAlign.Center,
         fontSize = 16.sp,
         color = CharcoalGray,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        fontWeight = FontWeight.Medium
+    )
+}
+
+@Composable
+fun NumberInputField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String
+) {
+    TextField(
+        value = value,
+        onValueChange = { newValue ->
+            if (newValue.length <= 6)
+                onValueChange(numberTextFieldValidation(newValue))
+        },
+        label = { Text(label) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        modifier = modifier,
+        colors = textFieldColorTheme(),
+        textStyle = textFieldTextStyle(),
+    )
+}
+
+fun numberTextFieldValidation(value: String): String {
+    val filtered = buildString {
+        var dotCount = 0
+        var lastChar: Char? = null
+        val allowedChars = "0123456789.,"
+
+        for (char in value) {
+            if (char !in allowedChars) continue
+
+            if (char == '.' || char == ',') {
+                if (dotCount > 0 || lastChar == '.' || lastChar == ',') continue
+                dotCount++
+                append('.')
+            } else {
+                append(char)
+            }
+            lastChar = char
+        }
+    }
+    return filtered
+}
+
+@Composable
+fun GlucoseTextField(
+    modifier: Modifier = Modifier,
+    value: Double,
+    measurement: GlucoseMeasurementType,
+    onValueChange: (String) -> Unit,
+    label: String
+) {
+    val displayValue = when (measurement) {
+        GlucoseMeasurementType.MMOL_L -> String.format(Locale.US, "%.1f", value)
+        GlucoseMeasurementType.MG_DL -> String.format(Locale.US,"%.1f", value * 18)
+        GlucoseMeasurementType.DEFAULT -> TODO()
+    }
+    
+    NumberInputField(
+        value = displayValue,
+        onValueChange = {newValue ->
+            val parsed = newValue.toDoubleOrNull()
+            parsed?.let {
+                val mmolValue = if (measurement == GlucoseMeasurementType.MG_DL) it / 18 else it
+                onValueChange(mmolValue.toString())
+            }
+        },
+        label = label,
+        modifier = modifier
     )
 }

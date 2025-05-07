@@ -1,4 +1,4 @@
-package com.redikt.diabetesapp.ui.theme
+package com.ordresot.diabetessupporter.theme
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Shapes

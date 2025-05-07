@@ -36,7 +36,7 @@
         </activity>
 
         <activity
-            android:name="com.ordresot.diabetessupporter.presentation.wizard.WizardActivity"
+            android:name="com.ordresot.diabetessupporter.presentation.wizard.ui.WizardActivity"
             android:exported="false"/>
     </application>
 </manifest>

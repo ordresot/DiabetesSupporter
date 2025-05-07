@@ -4,9 +4,15 @@ import android.content.Context
 import com.google.gson.Gson
 import com.ordresot.diabetessupporter.data.preference.SharedPrefsClient
 import com.ordresot.diabetessupporter.data.repository.PreferencesRepositoryImpl
+import com.ordresot.diabetessupporter.domain.api.interactor.GlucoseLimitsInteractor
+import com.ordresot.diabetessupporter.domain.api.interactor.ProfileInteractor
 import com.ordresot.diabetessupporter.domain.api.repository.PreferencesRepository
 import com.ordresot.diabetessupporter.domain.api.usecase.FirstRunUseCase
+import com.ordresot.diabetessupporter.domain.api.usecase.GlucoseMeasurementUseCase
+import com.ordresot.diabetessupporter.domain.impl.interactor.GlucoseLimitsLimitsInteractorImpl
+import com.ordresot.diabetessupporter.domain.impl.interactor.ProfileInteractorImpl
 import com.ordresot.diabetessupporter.domain.impl.usecase.FirstRunUseCaseImpl
+import com.ordresot.diabetessupporter.domain.impl.usecase.GlucoseMeasurementUseCaseImpl
 
 object Creator {
     private lateinit var applicationContext: Context
@@ -22,5 +28,19 @@ object Creator {
         )
     )
 
-    fun provideFirstRunUseCase(): FirstRunUseCase = FirstRunUseCaseImpl(getPreferencesRepository())
+    fun provideFirstRunUseCase(): FirstRunUseCase = FirstRunUseCaseImpl(
+        getPreferencesRepository()
+    )
+
+    fun provideGlucoseMeasurementUseCase(): GlucoseMeasurementUseCase = GlucoseMeasurementUseCaseImpl(
+        getPreferencesRepository()
+    )
+
+    fun provideProfileInteractor(): ProfileInteractor = ProfileInteractorImpl(
+        getPreferencesRepository()
+    )
+
+    fun provideGlucoseLimitsInteractor(): GlucoseLimitsInteractor = GlucoseLimitsLimitsInteractorImpl(
+        getPreferencesRepository()
+    )
 }

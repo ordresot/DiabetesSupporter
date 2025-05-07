@@ -1,7 +1,7 @@
 package com.ordresot.diabetessupporter.domain.models
 
-data class Medication(
+data class Medicine(
     val name: String,
-    val dose: Int,
-    val amount: Int
+    val value: Int,
+    val type: AmountType
 )
