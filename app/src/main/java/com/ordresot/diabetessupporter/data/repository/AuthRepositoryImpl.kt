@@ -1,44 +1,43 @@
-package com.ordresot.diabetessupporter.domain.impl.usecase
+package com.ordresot.diabetessupporter.data.repository
 
-import com.auth0.android.authentication.AuthenticationAPIClient
+import androidx.compose.runtime.internal.composableLambdaInstance
 import com.auth0.android.authentication.AuthenticationException
-import com.auth0.android.authentication.storage.CredentialsManager
 import com.auth0.android.authentication.storage.CredentialsManagerException
 import com.auth0.android.callback.Callback
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.auth0.android.result.UserProfile
+import com.ordresot.diabetessupporter.data.AuthClient
 import com.ordresot.diabetessupporter.domain.api.repository.AuthRepository
-import com.ordresot.diabetessupporter.domain.api.usecase.AuthUseCase
 
-class AuthUseCaseImpl(
-    private val repository: AuthRepository
-) : AuthUseCase {
+class AuthRepositoryImpl(
+    private val client: AuthClient
+): AuthRepository {
     override fun saveCredentials(credentials: Credentials) {
-        repository.saveCredentials(credentials)
+        client.saveCredentials(credentials)
     }
 
     override fun getCredentials(callback: Callback<Credentials, CredentialsManagerException>) {
-        repository.getCredentials(callback)
+        client.getCredentials(callback)
     }
 
     override fun clearCredentials() {
-        repository.clearCredentials()
+        client.clearCredentials()
     }
 
     override fun checkCredentials(): Boolean {
-        return repository.checkCredentials()
+        return client.checkCredentials()
     }
 
     override fun getUserProfile(callback: Callback<UserProfile, AuthenticationException>) {
-        repository.getUserProfile(callback)
+        client.getUserProfile(callback)
     }
 
     override fun getLoginBuilder(): WebAuthProvider.Builder {
-        return repository.getLoginBuilder()
+        return client.getLoginBuilder()
     }
 
     override fun getLogoutBuilder(): WebAuthProvider.LogoutBuilder {
-        return repository.getLogoutBuilder()
+        return client.getLogoutBuilder()
     }
 }

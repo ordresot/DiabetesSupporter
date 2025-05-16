@@ -8,13 +8,16 @@ import com.auth0.android.authentication.storage.CredentialsManager
 import com.auth0.android.authentication.storage.SharedPreferencesStorage
 import com.auth0.android.provider.WebAuthProvider
 import com.google.gson.Gson
+import com.ordresot.diabetessupporter.data.auth.Auth0Client
 import com.ordresot.diabetessupporter.data.network.DiabetesApiService
 import com.ordresot.diabetessupporter.data.network.RetrofitNetworkClient
 import com.ordresot.diabetessupporter.data.preference.SharedPrefsClient
+import com.ordresot.diabetessupporter.data.repository.AuthRepositoryImpl
 import com.ordresot.diabetessupporter.data.repository.PreferencesRepositoryImpl
 import com.ordresot.diabetessupporter.data.repository.RemoteDataRepositoryImpl
 import com.ordresot.diabetessupporter.domain.api.interactor.GlucoseLimitsInteractor
 import com.ordresot.diabetessupporter.domain.api.interactor.ProfileInteractor
+import com.ordresot.diabetessupporter.domain.api.repository.AuthRepository
 import com.ordresot.diabetessupporter.domain.api.repository.PreferencesRepository
 import com.ordresot.diabetessupporter.domain.api.repository.RemoteDataRepository
 import com.ordresot.diabetessupporter.domain.api.usecase.FirstRunUseCase
@@ -53,6 +56,21 @@ object Creator {
         SharedPreferencesStorage(applicationContext)
     )
 
+    private fun getAuthRepository(): AuthRepository = AuthRepositoryImpl(
+        Auth0Client(
+            authClient = getAuthenticationClient(),
+            credentialsManager = CredentialsManager(
+                getAuthenticationClient(),
+                SharedPreferencesStorage(applicationContext)
+            ),
+            loginBuilder = WebAuthProvider.login(getAuth0Account())
+                .withScheme("demo")
+                .withScope("openid email profile offline_access"),
+            logoutBuilder = WebAuthProvider.logout(getAuth0Account())
+                .withScheme("demo")
+        )
+    )
+
     private fun getRemoteDataRepository(): RemoteDataRepository = RemoteDataRepositoryImpl(
         RetrofitNetworkClient(
             Retrofit.Builder()
@@ -80,11 +98,5 @@ object Creator {
         getPreferencesRepository()
     )
 
-    fun provideAuthUseCase(): AuthUseCase = AuthUseCaseImpl(
-        getAuthManager(),
-        WebAuthProvider.login(getAuth0Account())
-            .withScheme("demo")
-            .withScope("openid email profile offline_access"),
-        getAuthenticationClient()
-    )
+    fun provideAuthUseCase(): AuthUseCase = AuthUseCaseImpl(getAuthRepository())
 }

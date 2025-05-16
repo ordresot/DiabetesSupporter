@@ -171,26 +171,40 @@ class WizardViewModel(
     }
 
     fun loginActivityBuilder(): WebAuthProvider.Builder{
-        return authUseCase.getAuthBuilder()
+        return authUseCase.getLoginBuilder()
+    }
+
+    fun logoutActivityBuilder(): WebAuthProvider.LogoutBuilder {
+        return authUseCase.getLogoutBuilder()
     }
 
     fun saveCredentials(credentials: Credentials) {
         _loggedIn.value = true
         authUseCase.saveCredentials(credentials)
+        getUserProfile()
+    }
+
+    fun clearCredentials() {
+        _loggedIn.value = false
+        authUseCase.clearCredentials()
     }
 
     fun checkCredentials(){
         if (authUseCase.checkCredentials()){
             _loggedIn.value = true
-            authUseCase.getUserProfile(
-                object : Callback<UserProfile, AuthenticationException> {
-                    override fun onFailure(error: AuthenticationException) {}
-
-                    override fun onSuccess(result: UserProfile) {
-                        _greeting.value = "Добро пожаловать, ${result.nickname ?: ""}!"
-                    }
-                }
-            )
+            getUserProfile()
         }
+    }
+
+    private fun getUserProfile(){
+        authUseCase.getUserProfile(
+            object : Callback<UserProfile, AuthenticationException> {
+                override fun onFailure(error: AuthenticationException) {}
+
+                override fun onSuccess(result: UserProfile) {
+                    _greeting.value = "Добро пожаловать,\n${result.email}!"
+                }
+            }
+        )
     }
 }

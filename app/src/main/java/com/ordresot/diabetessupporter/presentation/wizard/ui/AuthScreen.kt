@@ -96,12 +96,32 @@ fun AuthScreen(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium
                 )
+
+                Spacer(Modifier.height(25.dp))
+
+                StageOperatorButton(
+                    text = "Выйти из аккаунта",
+                    onClick = {
+                        viewModel.logoutActivityBuilder().start(
+                            context,
+                            object: Callback<Void?, AuthenticationException> {
+                                override fun onFailure(error: AuthenticationException) {
+                                    Toast.makeText(context, error.message, Toast.LENGTH_LONG).show()
+                                }
+
+                                override fun onSuccess(result: Void?) {
+                                    viewModel.clearCredentials()
+                                }
+                            }
+                        )
+                    }
+                )
             }
         }
 
         // Кнопка перехода
         StageOperatorButton(
-            text = SKIP_TEXT,
+            text = NEXT_BUTTON_TEXT,
             onClick = onNext,
             modifier = Modifier
                 .align(Alignment.BottomCenter)

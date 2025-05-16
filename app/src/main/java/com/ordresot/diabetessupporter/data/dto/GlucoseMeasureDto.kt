@@ -7,5 +7,4 @@ data class GlucoseMeasureDto(
     val result: Double,
     val measuredAt: OffsetDateTime,
     val circumstances: CircumstancesDto
-) {
-}
+)
