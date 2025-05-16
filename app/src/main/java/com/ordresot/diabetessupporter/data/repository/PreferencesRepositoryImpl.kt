@@ -65,25 +65,23 @@ class PreferencesRepositoryImpl(private val preferenceClient: PreferenceClient):
     override fun getProfile(): Profile {
         val value = preferenceClient.getData(Preference.ProfilePreference()) as ProfileDto
         return Profile(
-                name = value.name,
-                surname = value.surname,
-                weight = value.weight,
-                height = value.height,
-                birthday = value.birthday,
-                gender = value.gender
-            )
+            firstName = value.firstName,
+            lastName = value.lastName,
+            thirdName = value.thirdName,
+            gender = value.gender,
+            birthday = value.birthday
+        )
     }
 
     override fun saveProfile(value: Profile) {
         preferenceClient.saveData(
             Preference.ProfilePreference(
                 ProfileDto(
-                    name = value.name,
-                    surname = value.surname,
-                    weight = value.weight,
-                    height = value.height,
-                    birthday = value.birthday,
-                    gender = value.gender
+                    firstName = value.firstName,
+                    lastName = value.lastName,
+                    thirdName = value.thirdName,
+                    gender = value.gender,
+                    birthday = value.birthday
                 )
             )
         )

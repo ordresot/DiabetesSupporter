@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.ordresot.diabetessupporter.domain.api.usecase.FirstRunUseCase
-import com.redikt.diabetesapp.core.di.Creator
+import com.ordresot.diabetessupporter.core.di.Creator
 
 class MainViewModel(
     private val firstRunUseCase: FirstRunUseCase

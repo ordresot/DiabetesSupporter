@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
@@ -43,7 +44,10 @@ import com.ordresot.diabetessupporter.theme.LightGreen
 import java.util.Calendar
 
 @Composable
-fun StepOneScreen(viewModel: WizardViewModel, onNext: () -> Unit) {
+fun StepOneScreen(
+    viewModel: WizardViewModel,
+    onNext: () -> Unit,
+    onBack: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -72,20 +76,31 @@ fun StepOneScreen(viewModel: WizardViewModel, onNext: () -> Unit) {
             BirthDateSelector(viewModel)
 
             Spacer(Modifier.height(16.dp))
-
-            // Ввод роста, веса
-            WeightHeightInput(viewModel)
         }
 
-        // Кнопка перехода
-        StageOperatorButton(
-            text = NEXT_BUTTON_TEXT,
-            onClick = onNext,
+        Row(
             modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
-            iconEnd = Icons.AutoMirrored.Filled.KeyboardArrowRight
-        )
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            StageOperatorButton(
+                text = BACK_BUTTON_TEXT,
+                onClick = onBack,
+                Modifier.weight(1f),
+                iconStart = Icons.AutoMirrored.Filled.KeyboardArrowLeft
+            )
+
+            // Кнопка перехода
+            StageOperatorButton(
+                text = NEXT_BUTTON_TEXT,
+                onClick = onNext,
+                modifier = Modifier.weight(1f),
+                iconEnd = Icons.AutoMirrored.Filled.KeyboardArrowRight
+            )
+
+        }
+
     }
 }
 
@@ -95,6 +110,7 @@ fun NameSurnameInput(
 ){
     val firstName by viewModel.firstName.observeAsState("")
     val lastName by viewModel.lastName.observeAsState("")
+    val thirdName by viewModel.thirdName.observeAsState("")
 
     TextField(
         value = firstName,
@@ -113,9 +129,18 @@ fun NameSurnameInput(
         colors = textFieldColorTheme(),
         textStyle = textFieldTextStyle()
     )
+
+    TextField(
+        value = thirdName,
+        onValueChange = { viewModel.setThirdName(it) },
+        label = { Text("Отчество") },
+        modifier = Modifier.fillMaxWidth(),
+        colors = textFieldColorTheme(),
+        textStyle = textFieldTextStyle()
+    )
 }
 
-@Composable
+/*@Composable
 fun WeightHeightInput(
     viewModel: WizardViewModel
 ) {
@@ -143,7 +168,7 @@ fun WeightHeightInput(
             modifier = Modifier.weight(1f)
         )
     }
-}
+}*/
 
 @Composable
 fun BirthDateSelector(

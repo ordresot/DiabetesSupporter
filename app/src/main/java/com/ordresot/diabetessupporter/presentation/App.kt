@@ -1,7 +1,7 @@
 package com.ordresot.diabetessupporter.presentation
 
 import android.app.Application
-import com.redikt.diabetesapp.core.di.Creator
+import com.ordresot.diabetessupporter.core.di.Creator
 
 class App: Application() {
     override fun onCreate() {

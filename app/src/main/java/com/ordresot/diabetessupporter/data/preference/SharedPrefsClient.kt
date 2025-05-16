@@ -31,4 +31,8 @@ class SharedPrefsClient(
             gson.toJson(dto.value)
         ).apply()
     }
+
+    override fun clearData(dto: Preference) {
+        sharedPreferences.edit().remove(dto.key).apply()
+    }
 }

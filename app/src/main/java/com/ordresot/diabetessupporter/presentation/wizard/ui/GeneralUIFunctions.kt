@@ -47,6 +47,7 @@ import java.util.Locale
 const val BACK_BUTTON_TEXT = "Вернуться"
 const val FINISH_BUTTON_TEXT = "Завершить"
 const val NEXT_BUTTON_TEXT = "Далее"
+const val SKIP_TEXT = "Пропустить"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

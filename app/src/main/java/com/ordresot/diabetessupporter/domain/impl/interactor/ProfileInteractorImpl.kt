@@ -6,50 +6,38 @@ import com.ordresot.diabetessupporter.domain.models.GenderType
 import java.time.LocalDate
 
 class ProfileInteractorImpl(private val repository: PreferencesRepository): ProfileInteractor {
-    override fun getName(): String {
-        return repository.getProfile().name
+    override fun getFirstName(): String {
+        return repository.getProfile().firstName
     }
 
-    override fun setName(value: String) {
+    override fun setFirstName(value: String) {
         val profile = repository.getProfile()
         profile.apply {
-            name = value
+            firstName = value
         }
         repository.saveProfile(profile)
     }
 
-    override fun getSurname(): String {
-        return repository.getProfile().surname
+    override fun getLastName(): String {
+        return repository.getProfile().lastName
     }
 
-    override fun setSurname(value: String) {
+    override fun setLastName(value: String) {
         val profile = repository.getProfile()
         profile.apply {
-            surname = value
+            lastName = value
         }
         repository.saveProfile(profile)
     }
 
-    override fun getWeight(): Double? {
-        return repository.getProfile().weight
+    override fun getThirdName(): String {
+        return repository.getProfile().thirdName
     }
 
-    override fun setWeight(value: Double) {
+    override fun setThirdName(value: String) {
         val profile = repository.getProfile()
         profile.apply {
-            weight = value
-        }
-        repository.saveProfile(profile)
-    }
-
-    override fun getHeight(): Double? {
-        return repository.getProfile().height
-    }
-
-    override fun setHeight(value: Double) {
-        val profile = repository.getProfile()
-        profile.apply {
-            height = value
+            thirdName = value
         }
         repository.saveProfile(profile)
     }

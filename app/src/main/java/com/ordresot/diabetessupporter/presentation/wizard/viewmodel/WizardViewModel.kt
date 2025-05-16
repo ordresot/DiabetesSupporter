@@ -6,20 +6,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.auth0.android.authentication.AuthenticationException
+import com.auth0.android.callback.Callback
+import com.auth0.android.provider.WebAuthProvider
+import com.auth0.android.result.Credentials
+import com.auth0.android.result.UserProfile
 import com.ordresot.diabetessupporter.domain.api.interactor.GlucoseLimitsInteractor
 import com.ordresot.diabetessupporter.domain.api.interactor.ProfileInteractor
 import com.ordresot.diabetessupporter.domain.api.usecase.FirstRunUseCase
 import com.ordresot.diabetessupporter.domain.api.usecase.GlucoseMeasurementUseCase
+import com.ordresot.diabetessupporter.domain.api.usecase.AuthUseCase
 import com.ordresot.diabetessupporter.domain.models.GenderType
 import com.ordresot.diabetessupporter.domain.models.GlucoseMeasurementType
-import com.redikt.diabetesapp.core.di.Creator
+import com.ordresot.diabetessupporter.core.di.Creator
 import java.util.Calendar
 
 class WizardViewModel(
     private val firstRunUseCase: FirstRunUseCase,
     private val glucoseMeasurementUseCase: GlucoseMeasurementUseCase,
     private val profileInteractor: ProfileInteractor,
-    private val glucoseLimitsInteractor: GlucoseLimitsInteractor
+    private val glucoseLimitsInteractor: GlucoseLimitsInteractor,
+    private val authUseCase: AuthUseCase,
 ) : ViewModel() {
 
     companion object {
@@ -29,46 +36,43 @@ class WizardViewModel(
                     Creator.provideFirstRunUseCase(),
                     Creator.provideGlucoseMeasurementUseCase(),
                     Creator.provideProfileInteractor(),
-                    Creator.provideGlucoseLimitsInteractor()
+                    Creator.provideGlucoseLimitsInteractor(),
+                    Creator.provideAuthUseCase()
                 )
             }
         }
     }
 
+    // Секция логина
+    private val _loggedIn = MutableLiveData(false)
+    val loggedIn: LiveData<Boolean> = _loggedIn
+
+    // Секция приветствия
+    private val _greeting = MutableLiveData("")
+    val greeting: LiveData<String> = _greeting
+
     // Секция имени
-    private val _firstName = MutableLiveData(profileInteractor.getName())
+    private val _firstName = MutableLiveData(profileInteractor.getFirstName())
     val firstName: LiveData<String> = _firstName
     fun setFirstName(value: String) {
         _firstName.value = value
-        profileInteractor.setName(value)
+        profileInteractor.setFirstName(value)
     }
 
     // Секция фамилии
-    private val _lastName = MutableLiveData(profileInteractor.getSurname())
+    private val _lastName = MutableLiveData(profileInteractor.getLastName())
     val lastName: LiveData<String> = _lastName
     fun setLastName(value: String) {
         _lastName.value = value
-        profileInteractor.setSurname(value)
+        profileInteractor.setLastName(value)
     }
 
-    // Секция веса
-    private val _weight = MutableLiveData(profileInteractor.getWeight()?.toString() ?: "")
-    val weight: LiveData<String> = _weight
-    fun setWeight(value: String) {
-        if (value != "") {
-            _weight.value = value
-            profileInteractor.setWeight(value.toDouble())
-        }
-    }
-
-    // Секция роста
-    private val _height = MutableLiveData(profileInteractor.getHeight()?.toString() ?: "")
-    val height: LiveData<String> = _height
-    fun setHeight(value: String) {
-        if (value != "") {
-            _height.value = value
-            profileInteractor.setHeight(value.toDouble())
-        }
+    // Секция отчества
+    private val _thirdName = MutableLiveData(profileInteractor.getThirdName())
+    val thirdName: LiveData<String> = _lastName
+    fun setThirdName(value: String) {
+        _thirdName.value = value
+        profileInteractor.setThirdName(value)
     }
 
     // Секция даты рождения
@@ -146,7 +150,15 @@ class WizardViewModel(
         firstRunUseCase.setFirstRun(false)
     }
 
-    fun dateFormatter(value: Long?): String {
+    fun isPersonalDateCompleted(): Boolean{
+        return  _firstName.value != "" &&
+                _lastName.value != "" &&
+                _thirdName.value != "" &&
+                _gender.value != GenderType.DEFAULT &&
+                _birthDate.value != null
+    }
+
+    private fun dateFormatter(value: Long?): String {
         if (value != null){
             val calendar = Calendar.getInstance().apply { timeInMillis = value }
             return "%02d.%02d.%04d".format(
@@ -156,5 +168,29 @@ class WizardViewModel(
             )
         }
         else return ""
+    }
+
+    fun loginActivityBuilder(): WebAuthProvider.Builder{
+        return authUseCase.getAuthBuilder()
+    }
+
+    fun saveCredentials(credentials: Credentials) {
+        _loggedIn.value = true
+        authUseCase.saveCredentials(credentials)
+    }
+
+    fun checkCredentials(){
+        if (authUseCase.checkCredentials()){
+            _loggedIn.value = true
+            authUseCase.getUserProfile(
+                object : Callback<UserProfile, AuthenticationException> {
+                    override fun onFailure(error: AuthenticationException) {}
+
+                    override fun onSuccess(result: UserProfile) {
+                        _greeting.value = "Добро пожаловать, ${result.nickname ?: ""}!"
+                    }
+                }
+            )
+        }
     }
 }

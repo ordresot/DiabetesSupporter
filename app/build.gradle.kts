@@ -15,6 +15,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        //---> Add the next line
+        manifestPlaceholders["auth0Domain"] = "@string/com_auth0_domain"
+        manifestPlaceholders["auth0Scheme"] = "demo"
+        //<---
     }
 
     buildTypes {
@@ -73,4 +78,11 @@ dependencies {
     implementation(libs.androidx.animation)
 
     implementation("androidx.compose.runtime:runtime-livedata:1.6.5")
+
+    // Auth0
+    implementation("com.auth0.android:auth0:3.5.0")
+
+    // Encrypted Shared Preferences
+    implementation("androidx.security:security-crypto:1.1.0-alpha07")
+    implementation("androidx.security:security-crypto-ktx:1.1.0-alpha07")
 }

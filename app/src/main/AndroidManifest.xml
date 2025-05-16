@@ -6,12 +6,21 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission
+        android:name="android.permission.CAMERA" />
+
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission
+        android:name="android.permission.INTERNET" />
+
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name="com.ordresot.diabetessupporter.presentation.App"
@@ -27,6 +36,11 @@
 
         <activity
             android:name="com.ordresot.diabetessupporter.presentation.main.MainActivity"
+            android:exported="false">
+        </activity>
+
+        <activity
+            android:name="com.ordresot.diabetessupporter.presentation.wizard.ui.WizardActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,9 +48,5 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="com.ordresot.diabetessupporter.presentation.wizard.ui.WizardActivity"
-            android:exported="false"/>
     </application>
 </manifest>

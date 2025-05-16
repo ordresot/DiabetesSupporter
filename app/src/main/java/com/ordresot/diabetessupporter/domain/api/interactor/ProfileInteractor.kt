@@ -1,21 +1,17 @@
 package com.ordresot.diabetessupporter.domain.api.interactor
 
 import com.ordresot.diabetessupporter.domain.models.GenderType
-import java.time.LocalDate
 
 
 interface ProfileInteractor {
-    fun getName(): String
-    fun setName(value: String)
+    fun getFirstName(): String
+    fun setFirstName(value: String)
 
-    fun getSurname(): String
-    fun setSurname(value: String)
+    fun getLastName(): String
+    fun setLastName(value: String)
 
-    fun getWeight(): Double?
-    fun setWeight(value: Double)
-
-    fun getHeight(): Double?
-    fun setHeight(value: Double)
+    fun getThirdName(): String
+    fun setThirdName(value: String)
 
     fun getBirthday(): Long?
     fun setBirthday(value: Long)

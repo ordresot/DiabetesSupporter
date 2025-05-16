@@ -20,6 +20,8 @@ class WizardActivity : AppCompatActivity() {
             WizardViewModel.getViewModelFactory()
         )[WizardViewModel::class.java]
 
+        viewModel.checkCredentials()
+
         setContent {
             DiabetesAppTheme {
                 WizardNavGraph(viewModel, this)

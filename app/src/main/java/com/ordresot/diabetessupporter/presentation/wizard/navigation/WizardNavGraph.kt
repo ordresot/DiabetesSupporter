@@ -1,5 +1,7 @@
 package com.ordresot.diabetessupporter.presentation.wizard.navigation
 
+import android.content.Intent
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -9,6 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.ordresot.diabetessupporter.presentation.main.MainActivity
+import com.ordresot.diabetessupporter.presentation.wizard.ui.AuthScreen
 import com.ordresot.diabetessupporter.presentation.wizard.ui.StepOneScreen
 import com.ordresot.diabetessupporter.presentation.wizard.ui.StepTwoScreen
 import com.ordresot.diabetessupporter.presentation.wizard.ui.WizardProgressBar
@@ -17,11 +21,12 @@ import com.ordresot.diabetessupporter.presentation.wizard.viewmodel.WizardViewMo
 @Composable
 fun WizardNavGraph(viewModel: WizardViewModel, context: AppCompatActivity) {
     val navController = rememberNavController()
-    val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route ?: "step1"
+    val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route ?: "step0"
     val currentStep = when (currentDestination) {
-        "step1" -> 0
-        "step2" -> 1
-        else -> 0
+        "step0" -> 0
+        "step1" -> 1
+        "step2" -> 2
+        else -> -1
     }
 
     Scaffold(
@@ -31,13 +36,23 @@ fun WizardNavGraph(viewModel: WizardViewModel, context: AppCompatActivity) {
     ) { padding ->
         NavHost(
             navController = navController,
-            startDestination = "step1",
+            startDestination = "step0",
             modifier = Modifier.padding(padding)
         ) {
+            composable("step0") {
+                AuthScreen(
+                    viewModel,
+                    onNext =
+                    {
+                        navController.navigate("step1")
+                    }
+                )
+            }
             composable("step1") {
                 StepOneScreen(
                     viewModel,
-                    onNext = { navController.navigate("step2") }
+                    onNext = { navController.navigate("step2") },
+                    onBack = { navController.navigate("step0") }
                 )
             }
             composable("step2") {
@@ -45,10 +60,22 @@ fun WizardNavGraph(viewModel: WizardViewModel, context: AppCompatActivity) {
                     viewModel,
                     onNext =
                     {
-                        viewModel.finishSettingUp()
-                        context.finish()
+                        if (viewModel.isPersonalDateCompleted()) {
+                            viewModel.finishSettingUp()
+                            context.startActivity(
+                                Intent(
+                                    context,
+                                    MainActivity::class.java
+                                )
+                            )
+                        }
+                        else {
+                            Toast.makeText(context, "Вы заполнили не все поля персональных данных.", Toast.LENGTH_SHORT).show()
+                        }
                     },
-                    onBack = { navController.popBackStack() }
+                    onBack = {
+                        navController.navigate("step1")
+                    }
                 )
             }
         }

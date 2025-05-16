@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ordresot.diabetessupporter.domain.models.GlucoseMeasurementType
+import com.ordresot.diabetessupporter.presentation.wizard.model.ActionType
 import com.ordresot.diabetessupporter.presentation.wizard.viewmodel.WizardViewModel
 import com.ordresot.diabetessupporter.theme.CharcoalGray
 

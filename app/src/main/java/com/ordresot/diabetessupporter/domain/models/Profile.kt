@@ -3,10 +3,9 @@ package com.ordresot.diabetessupporter.domain.models
 import java.time.LocalDate
 
 data class Profile(
-    var name: String = "",
-    var surname: String = "",
-    var gender: GenderType,
-    var weight: Double?,
-    var height: Double?,
+    var firstName: String = "",
+    var lastName: String = "",
+    var thirdName: String= "",
+    var gender: GenderType = GenderType.DEFAULT,
     var birthday: Long?
 )
